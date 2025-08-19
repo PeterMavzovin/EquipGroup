@@ -44,14 +44,16 @@ class CatalogController extends Controller
         }
 
         // 4. Пагинация товаров
-        $products = $productsQuery->paginate(10); // Разбиваем результаты на страницы, по 10 товаров на страницу
-
+        $perPage = $request->query('per_page', 12); // Получаем per_page из запроса, по умолчанию 12
+        $products = $productsQuery->paginate($perPage); // Используем perPage
+        
         // Передаем данные в представление
         return view('catalog.index', [
             'topLevelGroups' => $topLevelGroups, // Группы первого уровня
             'products' => $products,             // Отсортированные и пагинированные товары
             'sortBy' => $sortBy,                 // Текущий параметр сортировки
             'sortOrder' => $sortOrder,           // Текущий порядок сортировки
+            'perPage' => $perPage,               // Текущее количество товаров на страницу
         ]);
     }
 
@@ -89,14 +91,17 @@ class CatalogController extends Controller
 
         // 4. Ручная пагинация для коллекции (не для Query Builder)
         $currentPage = LengthAwarePaginator::resolveCurrentPage(); // Получаем текущую страницу из запроса
-        $perPage = 10; // Количество элементов на страницу
+        $perPage = $request->query('per_page', 12); // Получаем per_page из запроса, по умолчанию 12
         $currentPageItems = $sortedProducts->slice(($currentPage - 1) * $perPage, $perPage)->all(); // Выбираем элементы для текущей страницы
         $products = new LengthAwarePaginator($currentPageItems, count($sortedProducts), $perPage);
         $products->setPath($request->url()); // Устанавливаем базовый URL для ссылок пагинации
 
+        // Добавляем параметр per_page к ссылкам пагинации
+        $products->appends(['per_page' => $perPage, 'sort_by' => $sortBy, 'sort_order' => $sortOrder]);
+
         // 5. Генерируем хлебные крошки для текущей группы
         $breadcrumbs = [];
-        $currentBreadcrumbGroup = $group; // Начинаем с текущей группы
+        $currentBreadcrumbGroup = $group;
 
         while ($currentBreadcrumbGroup) {
             // Добавляем родительскую группу в начало массива хлебных крошек
@@ -115,6 +120,8 @@ class CatalogController extends Controller
             'sortBy' => $sortBy,           // Текущий параметр сортировки
             'sortOrder' => $sortOrder,     // Текущий порядок сортировки
             'breadcrumbs' => $breadcrumbs, // Сформированные хлебные крошки
+            'perPage' => $perPage,         // Текущее количество товаров на страницу
+
         ]);
     }
 
