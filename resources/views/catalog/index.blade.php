@@ -26,37 +26,37 @@
             <h3 class="mb-3">Все товары</h3>
 
         {{-- Форма для сортировки и выбора количества товаров --}}
-    <div class="d-flex justify-content-between align-items-center mb-3"> {{-- Использование d-flex для выравнивания --}}
-        <div>
-            <label for="sort" class="form-label mb-0 me-2">Сортировка:</label> {{-- mb-0 и me-2 для выравнивания --}}
-            <div class="btn-group btn-group-responsive" role="group" aria-label="Сортировка товаров">
-                <a href="{{ route('catalog.index', ['sort_by' => 'name', 'sort_order' => 'asc', 'per_page' => $perPage]) }}"
-                class="btn btn-outline-secondary {{ $sortBy === 'name' && $sortOrder === 'asc' ? 'active' : '' }}">Название (А-Я)</a>
-                <a href="{{ route('catalog.index', ['sort_by' => 'name', 'sort_order' => 'desc', 'per_page' => $perPage]) }}"
-                class="btn btn-outline-secondary {{ $sortBy === 'name' && $sortOrder === 'desc' ? 'active' : '' }}">Название (Я-А)</a>
-                <a href="{{ route('catalog.index', ['sort_by' => 'price', 'sort_order' => 'asc', 'per_page' => $perPage]) }}"
-                class="btn btn-outline-secondary {{ $sortBy === 'price' && $sortOrder === 'asc' ? 'active' : '' }}">Цена (возр.)</a>
-                <a href="{{ route('catalog.index', ['sort_by' => 'price', 'sort_order' => 'desc', 'per_page' => $perPage]) }}"
-                class="btn btn-outline-secondary {{ $sortBy === 'price' && $sortOrder === 'desc' ? 'active' : '' }}">Цена (убыв.)</a>
+        <div class="d-flex justify-content-between align-items-center mb-3"> {{-- Использование d-flex для выравнивания --}}
+            <div>
+                <label for="sort" class="form-label mb-0 me-2">Сортировка:</label> {{-- mb-0 и me-2 для выравнивания --}}
+                <div class="btn-group btn-group-responsive" role="group" aria-label="Сортировка товаров">
+                    <a href="{{ route('catalog.index', ['sort_by' => 'name', 'sort_order' => 'asc', 'per_page' => $perPage]) }}"
+                    class="btn btn-outline-secondary {{ $sortBy === 'name' && $sortOrder === 'asc' ? 'active' : '' }}">Название (А-Я)</a>
+                    <a href="{{ route('catalog.index', ['sort_by' => 'name', 'sort_order' => 'desc', 'per_page' => $perPage]) }}"
+                    class="btn btn-outline-secondary {{ $sortBy === 'name' && $sortOrder === 'desc' ? 'active' : '' }}">Название (Я-А)</a>
+                    <a href="{{ route('catalog.index', ['sort_by' => 'price', 'sort_order' => 'asc', 'per_page' => $perPage]) }}"
+                    class="btn btn-outline-secondary {{ $sortBy === 'price' && $sortOrder === 'asc' ? 'active' : '' }}">Цена (возр.)</a>
+                    <a href="{{ route('catalog.index', ['sort_by' => 'price', 'sort_order' => 'desc', 'per_page' => $perPage]) }}"
+                    class="btn btn-outline-secondary {{ $sortBy === 'price' && $sortOrder === 'desc' ? 'active' : '' }}">Цена (убыв.)</a>
+                </div>
+            </div>
+            <div>
+                <label for="per_page" class="form-label mb-0 me-2">Показать:</label>
+                <div class="btn-group" role="group" aria-label="Количество товаров на странице">
+                    @foreach([6, 12, 18] as $option)
+                        <a href="{{ route('catalog.index', ['sort_by' => $sortBy, 'sort_order' => $sortOrder, 'per_page' => $option]) }}"
+                        class="btn btn-outline-secondary {{ $perPage == $option ? 'active' : '' }}">
+                            {{ $option }}
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </div>
-        <div>
-            <label for="per_page" class="form-label mb-0 me-2">Показать:</label>
-            <div class="btn-group" role="group" aria-label="Количество товаров на странице">
-                @foreach([6, 12, 18] as $option)
-                    <a href="{{ route('catalog.index', ['sort_by' => $sortBy, 'sort_order' => $sortOrder, 'per_page' => $option]) }}"
-                    class="btn btn-outline-secondary {{ $perPage == $option ? 'active' : '' }}">
-                        {{ $option }}
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    </div>
 
     {{-- Отображение товаров --}}
     <div class="row">
         @forelse ($products as $product)
-            <div class="col-md-4"> {{-- Используем col-md-4 для 3 товаров в ряд на больших экранах --}}
+            <div class="col-md-4 col-sm-6"> {{-- Используем col-md-4 для 3 товаров в ряд на больших экранах --}}
                 <div class="card product-card">
                     <div class="card-body">
                         <h5 class="card-title">
