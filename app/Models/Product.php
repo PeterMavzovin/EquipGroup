@@ -11,7 +11,9 @@ class Product extends Model
 
     // Указываем явное имя таблицы
     protected $table = 'products';
+    protected $fillable = ['id_group', 'name'];
 
+    public $timestamps = false;
     /**
      * Получает группу, к которой принадлежит товар.
      */

@@ -11,7 +11,10 @@ class Group extends Model
 
     // Указываем явное имя таблицы, так как оно не соответствует стандартному именованию Laravel (group -> groups)
     protected $table = 'groups';
+    protected $fillable = ['id_parent', 'name'];
 
+    // Если у вас нет created_at и updated_at, добавьте эту строку
+    public $timestamps = false;
     /**
      * Получает товары, которые напрямую принадлежат этой группе.
      */

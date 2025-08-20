@@ -11,7 +11,9 @@ class Price extends Model
 
     // Указываем явное имя таблицы
     protected $table = 'prices';
+    protected $fillable = ['id_product', 'price'];
 
+    public $timestamps = false;
     /**
      * Получает товар, к которому относится эта цена.
      */
