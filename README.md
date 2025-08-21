@@ -1,61 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EquipGroup Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Этот проект представляет собой Laravel-приложение, которое можно запустить с использованием Docker Compose.
 
-## About Laravel
+## Содержание
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Требования](#требования)
+- [Запуск проекта](#запуск-проекта)
+  - [1. Клонирование репозитория](#1-клонирование-репозитория)
+  - [2. Настройка файла .env](#2-настройка-файла-env)
+  - [3. Запуск Docker-контейнеров](#3-запуск-docker-контейнеров)
+  - [4. Установка зависимостей Composer](#4-установка-зависимостей-composer)
+  - [5. Генерация ключа приложения Laravel](#5-генерация-ключа-приложения-laravel)
+  - [6. Выполнение миграций базы данных и заполнение данными](#6-выполнение-миграций-базы-данных-и-заполнение-данными)
+- [Доступ к приложению](#доступ-к-приложению)
+- [Остановка проекта](#остановка-проекта)
+- [Устранение неполадок](#устранение-неполадок)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Требования
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Для запуска проекта вам потребуется установленный [Docker](https://www.docker.com/get-started/) и [Docker Compose](https://docs.docker.com/compose/install/).
 
-## Learning Laravel
+## Запуск проекта
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Следуйте этим шагам для запуска проекта с использованием Docker Compose:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Клонирование репозитория
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Если вы еще не клонировали репозиторий, сделайте это:
 
-## Laravel Sponsors
+```bash
+git clone <URL_вашего_репозитория>
+cd EquipGroup
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. Настройка файла .env
 
-### Premium Partners
+Создайте файл `.env` в корневой директории проекта, скопировав `.env.example`:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+cp .env.example .env
+```
 
-## Contributing
+Отредактируйте файл `.env`, чтобы он содержал следующие настройки для подключения к базе данных MySQL, работающей в Docker-контейнерах:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_password
+```
 
-## Code of Conduct
+### 3. Запуск Docker-контейнеров
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Выполните следующую команду в корневой директории проекта, чтобы запустить все сервисы (Nginx, PHP-FPM, MySQL):
 
-## Security Vulnerabilities
+```bash
+docker compose up -d
+```
+Эта команда создаст и запустит контейнеры в фоновом режиме. MySQL-контейнер может потребовать некоторое время для полной инициализации при первом запуске.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Установка зависимостей Composer
 
-## License
+После запуска контейнеров установите зависимости Laravel внутри PHP-контейнера:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+docker compose exec php composer install
+```
+
+### 5. Генерация ключа приложения Laravel
+
+Сгенерируйте ключ приложения Laravel. Это необходимо для корректной работы приложения:
+
+```bash
+docker compose exec php php artisan key:generate
+```
+
+### 6. Выполнение миграций базы данных и заполнение данными
+
+Выполните миграции, чтобы создать все необходимые таблицы в базе данных, и затем заполните их тестовыми данными с помощью сидов (Faker):
+
+```bash
+docker compose exec php php artisan migrate:fresh --seed
+```
+Команда `migrate:fresh` удалит все существующие таблицы и создаст их заново, а `--seed` запустит сиды для заполнения их данными.
+
+## Доступ к приложению
+
+После выполнения всех шагов, ваше приложение должно быть доступно по адресу:
+
+[http://localhost](http://localhost)
+
+## Остановка проекта
+
+Чтобы остановить все запущенные сервисы Docker Compose:
+
+```bash
+docker compose down
+```
+
+Если вы хотите остановить сервисы и удалить все связанные тома (что приведет к потере всех данных в базе данных), используйте:
+
+```bash
+docker compose down -v
+```
+Это полезно, если вы хотите начать с чистого листа.
+
+## Устранение неполадок
+
+*   **`Connection refused`**: Если вы получили эту ошибку при выполнении команд `php artisan`, это означает, что PHP-контейнер не смог подключиться к MySQL. Убедитесь, что все контейнеры запущены (`docker compose ps`) и дайте MySQL достаточно времени для инициализации. Повторите команду `docker compose exec php ...` через несколько секунд.
+*   **`Table 'xxx' already exists`**: Если вы видите эту ошибку при миграциях, это означает, что таблицы уже существуют. Используйте `docker compose down -v` для полного сброса базы данных перед повторным запуском миграций.
+*   **`Unknown column 'xyz'`**: Эта ошибка означает, что в базе данных отсутствует ожидаемая колонка. Убедитесь, что ваши файлы миграций (`database/migrations/...`) точно соответствуют требуемой структуре таблиц и что вы успешно выполнили `php artisan migrate:fresh --seed`.
