@@ -16,9 +16,14 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY composer.json composer.lock ./
+COPY bootstrap/ ./bootstrap/
+COPY config/ ./config/
+COPY artisan ./
+COPY .env .env
 
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN composer install
 COPY . .
+RUN php artisan key:generate
 
 EXPOSE 9000
 CMD ["php-fpm"]
